@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -c js/level.js)",
+      "Bash(git add js/game.js js/constants.js js/level.js)",
+      "Bash(git add js/constants.js)",
+      "Bash(gh api repos/Karin-arad/shelters/pages --jq '.html_url, .status, .build_type')",
+      "Bash(gh api repos/Karin-arad/shelters/pages/builds --jq '.[0] | {status, created_at, error: .error.message}')",
+      "Bash(gh api repos/Karin-arad/shelters/pages --jq '.status')",
+      "Bash(gh api repos/Karin-arad/shelters/pages --jq '.html_url')",
+      "WebFetch(domain:karin-arad.github.io)",
+      "Bash(git add index.html js/constants.js js/game.js js/level.js js/renderer.js js/timer.js js/ui.js)"
+    ]
+  }
+}
