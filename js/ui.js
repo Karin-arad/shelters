@@ -686,6 +686,131 @@ class UI {
   }
 
   // ============================================================
+  // QUIZ SCREEN
+  // ============================================================
+
+  drawQuiz(question, options, wrongTimer, timer) {
+    const ctx = this.ctx;
+
+    // Dark overlay
+    ctx.fillStyle = 'rgba(10, 10, 20, 0.88)';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // Red flash overlay on wrong answer
+    if (wrongTimer > 0) {
+      const flashAlpha = wrongTimer * 0.4;
+      ctx.fillStyle = `rgba(231, 76, 60, ${flashAlpha})`;
+      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    }
+
+    // Shake offset if wrong answer
+    const shakeX = wrongTimer > 0 ? Math.sin(Date.now() * 0.05) * 8 : 0;
+    const shakeY = wrongTimer > 0 ? Math.cos(Date.now() * 0.07) * 5 : 0;
+
+    ctx.save();
+    ctx.translate(shakeX, shakeY);
+
+    // Timer in corner
+    if (timer) {
+      const timerColor = timer.isCritical() ? COLORS.danger :
+                         timer.isLow() ? COLORS.warning : COLORS.textPrimary;
+      ctx.font = 'bold 24px Arial';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = timerColor;
+      if (timer.isCritical()) {
+        const pulse = Math.sin(Date.now() * 0.01) * 0.3 + 0.7;
+        ctx.globalAlpha = pulse;
+      }
+      ctx.fillText(`${STRINGS.timerLabel}  ${timer.getFormatted()}`, 25, 38);
+      ctx.globalAlpha = 1;
+    }
+
+    // Title label
+    ctx.fillStyle = COLORS.warning;
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'center';
+    ctx.direction = 'rtl';
+    ctx.fillText('!הוכח שאתה ישראלי', CANVAS_WIDTH / 2, 80);
+    ctx.direction = 'ltr';
+
+    // Question
+    ctx.fillStyle = COLORS.textPrimary;
+    ctx.font = 'bold 30px Arial';
+    ctx.textAlign = 'center';
+    ctx.direction = 'rtl';
+    ctx.fillText(question, CANVAS_WIDTH / 2, 140);
+    ctx.direction = 'ltr';
+
+    // Two option buttons
+    const btnW = 400;
+    const btnH = 70;
+    const gap = 30;
+    const startY = 200;
+
+    for (let i = 0; i < 2; i++) {
+      const bounds = this.getQuizOptionBounds(i);
+
+      // Button background
+      ctx.fillStyle = wrongTimer > 0 && !options[i].isCorrect
+        ? 'rgba(231, 76, 60, 0.15)'
+        : 'rgba(255, 255, 255, 0.08)';
+      drawRoundedRect(ctx, bounds.x, bounds.y, bounds.width, bounds.height, 12);
+      ctx.fill();
+
+      // Border
+      ctx.strokeStyle = wrongTimer > 0 && !options[i].isCorrect
+        ? COLORS.danger
+        : 'rgba(255, 255, 255, 0.25)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Number badge
+      ctx.fillStyle = COLORS.warning;
+      ctx.font = 'bold 20px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${i + 1}`, bounds.x + 25, bounds.y + bounds.height / 2 + 7);
+
+      // Option text
+      ctx.fillStyle = COLORS.textPrimary;
+      ctx.font = '22px Arial';
+      ctx.textAlign = 'center';
+      ctx.direction = 'rtl';
+      ctx.fillText(options[i].text, bounds.x + bounds.width / 2 + 10, bounds.y + bounds.height / 2 + 8);
+      ctx.direction = 'ltr';
+    }
+
+    // Wrong answer feedback
+    if (wrongTimer > 0) {
+      ctx.fillStyle = COLORS.danger;
+      ctx.font = 'bold 26px Arial';
+      ctx.textAlign = 'center';
+      ctx.direction = 'rtl';
+      ctx.fillText('!לא ישראלי מספיק, נסה שוב', CANVAS_WIDTH / 2, startY + (btnH + gap) * 2 + 30);
+      ctx.direction = 'ltr';
+    }
+
+    // Hint
+    ctx.fillStyle = COLORS.textSecondary;
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('לחצו על התשובה או הקישו 1 / 2', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 30);
+
+    ctx.restore();
+
+    this.renderer.drawVignette();
+  }
+
+  getQuizOptionBounds(index) {
+    const btnW = 400;
+    const btnH = 70;
+    const gap = 30;
+    const startY = 200;
+    const x = CANVAS_WIDTH / 2 - btnW / 2;
+    const y = startY + index * (btnH + gap);
+    return { x, y, width: btnW, height: btnH };
+  }
+
+  // ============================================================
   // SHELTER CHOICE SCREEN (end of last floor)
   // ============================================================
 

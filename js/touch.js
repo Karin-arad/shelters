@@ -59,7 +59,13 @@ class TouchControls {
         }
       } else {
         // Tap outside buttons — store touch position for click simulation
-        this.activeTouches[touch.identifier] = { type: '__tap__', clientX: touch.clientX, clientY: touch.clientY };
+        this.activeTouches[touch.identifier] = {
+          type: '__tap__',
+          clientX: touch.clientX,
+          clientY: touch.clientY,
+          startX: touch.clientX,
+          startY: touch.clientY,
+        };
       }
     }
   }
@@ -88,8 +94,17 @@ class TouchControls {
         }
         this.activeTouches[touch.identifier] = currBtn;
       } else if (!currBtn) {
-        // Finger moved — cancel tap (it's a drag, not a tap)
-        this.activeTouches[touch.identifier] = null;
+        // Finger moved — only cancel tap if moved more than 20px (Android touch jitter fix)
+        const entry = this.activeTouches[touch.identifier];
+        if (entry && typeof entry === 'object' && entry.type === '__tap__') {
+          const dx = touch.clientX - entry.startX;
+          const dy = touch.clientY - entry.startY;
+          if (dx * dx + dy * dy > 400) { // 20px threshold
+            this.activeTouches[touch.identifier] = null;
+          }
+        } else {
+          this.activeTouches[touch.identifier] = null;
+        }
       }
     }
   }

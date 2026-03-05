@@ -26,6 +26,12 @@ class Game {
 
     this.lastTime = 0;
 
+    // Quiz state
+    this.quizQuestion = null;
+    this.quizOptions = []; // [{text, isCorrect}, {text, isCorrect}]
+    this.quizWrongTimer = 0;
+    this.quizUsedIndices = [];
+
     // Touch controls (mobile)
     this.touchControls = new TouchControls(canvas, this.input);
 
@@ -49,6 +55,7 @@ class Game {
   _startGame(charDef) {
     this.selectedChar = charDef;
     this.sheltersFound = 0;
+    this.quizUsedIndices = [];
     this.level = new Level();
     const floor = this.level.getCurrentFloor();
     const startX = floor.direction > 0 ? 80 : floor.hallwayLength - 80;
@@ -81,15 +88,57 @@ class Game {
   }
 
   _triggerSuccess() {
-    // Instead of ending, loop: generate more floors and continue
-    this.sheltersFound = (this.sheltersFound || 0) + 1;
+    // Show quiz before allowing shelter entry
     this.doorSound.play();
-    this.ui.showMessage(`!מקלט ${this.sheltersFound} נמצא`, 2);
-    // Add bonus time for finding shelter
-    this.timer.addBonus(10);
-    // Generate new floors and continue
-    this.level.extendFloors();
-    this._enterStairwell();
+    this._startQuiz();
+  }
+
+  _startQuiz() {
+    this.state = GameState.QUIZ;
+    // Pick a question not recently used
+    let idx;
+    const available = [];
+    for (let i = 0; i < QUIZ_QUESTIONS.length; i++) {
+      if (!this.quizUsedIndices.includes(i)) available.push(i);
+    }
+    if (available.length === 0) {
+      this.quizUsedIndices = [];
+      idx = Math.floor(Math.random() * QUIZ_QUESTIONS.length);
+    } else {
+      idx = randomChoice(available);
+    }
+    this.quizUsedIndices.push(idx);
+    const q = QUIZ_QUESTIONS[idx];
+    this.quizQuestion = q.question;
+    // Randomize option order
+    if (Math.random() < 0.5) {
+      this.quizOptions = [
+        { text: q.correct, isCorrect: true },
+        { text: q.wrong, isCorrect: false },
+      ];
+    } else {
+      this.quizOptions = [
+        { text: q.wrong, isCorrect: false },
+        { text: q.correct, isCorrect: true },
+      ];
+    }
+    this.quizWrongTimer = 0;
+  }
+
+  _quizAnswer(optionIndex) {
+    if (this.quizOptions[optionIndex].isCorrect) {
+      // Correct — enter shelter
+      this.sheltersFound = (this.sheltersFound || 0) + 1;
+      this.ui.showMessage(`!מקלט ${this.sheltersFound} נמצא`, 2);
+      this.timer.addBonus(15);
+      this.level.extendFloors();
+      this._enterStairwell();
+    } else {
+      // Wrong — visual flash + haptic vibration on mobile
+      this.quizWrongTimer = 0.6;
+      ScreenShake.trigger(10, 0.4);
+      if (navigator.vibrate) navigator.vibrate(200);
+    }
   }
 
   _triggerFailure(message) {
@@ -142,6 +191,28 @@ class Game {
 
       case GameState.STAIRWELL:
         this._updateStairwell(dt);
+        break;
+
+      case GameState.QUIZ:
+        // Timer keeps ticking during quiz
+        this.timer.update(dt);
+        if (this.timer.isExpired()) {
+          if (this.sheltersFound > 0) {
+            this.state = GameState.SUCCESS;
+          } else {
+            this._triggerFailure();
+          }
+          this.timer.stop();
+          this.siren.stop();
+          break;
+        }
+        if (this.quizWrongTimer > 0) this.quizWrongTimer -= dt;
+        // Keyboard shortcuts: 1 = top option, 2 = bottom option
+        if (this.input.isJustPressed('Digit1') || this.input.isJustPressed('Numpad1')) {
+          this._quizAnswer(0);
+        } else if (this.input.isJustPressed('Digit2') || this.input.isJustPressed('Numpad2')) {
+          this._quizAnswer(1);
+        }
         break;
 
       case GameState.SUCCESS:
@@ -320,6 +391,10 @@ class Game {
         this.ui.drawHUD(this.timer, this.level.currentFloor, this.player);
         break;
 
+      case GameState.QUIZ:
+        this.ui.drawQuiz(this.quizQuestion, this.quizOptions, this.quizWrongTimer, this.timer);
+        break;
+
       case GameState.SUCCESS:
         this.ui.drawSuccess(this.timer, this.selectedChar, this.sheltersFound);
         break;
@@ -483,6 +558,17 @@ class Game {
           this._startGame(CHARACTERS.male);
         } else if (this._isInBounds(pos, female)) {
           this._startGame(CHARACTERS.female);
+        }
+        break;
+      }
+
+      case GameState.QUIZ: {
+        const opt0 = this.ui.getQuizOptionBounds(0);
+        const opt1 = this.ui.getQuizOptionBounds(1);
+        if (this._isInBounds(pos, opt0)) {
+          this._quizAnswer(0);
+        } else if (this._isInBounds(pos, opt1)) {
+          this._quizAnswer(1);
         }
         break;
       }
