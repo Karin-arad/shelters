@@ -110,6 +110,12 @@ class Game {
 
       case GameState.INSTRUCTIONS:
         if (this.input.isJustPressed('Space') || this.input.isJustPressed('Enter')) {
+          this.state = GameState.INSTRUCTIONS2;
+        }
+        break;
+
+      case GameState.INSTRUCTIONS2:
+        if (this.input.isJustPressed('Space') || this.input.isJustPressed('Enter')) {
           this._startCharacterSelect();
         }
         break;
@@ -284,6 +290,10 @@ class Game {
         this.ui.drawInstructions(this.skyEffects);
         break;
 
+      case GameState.INSTRUCTIONS2:
+        this.ui.drawInstructions2(this.skyEffects);
+        break;
+
       case GameState.SELECT:
         this.ui.drawCharacterSelect();
         break;
@@ -423,6 +433,11 @@ class Game {
       }
 
       case GameState.INSTRUCTIONS: {
+        this.state = GameState.INSTRUCTIONS2;
+        break;
+      }
+
+      case GameState.INSTRUCTIONS2: {
         this._startCharacterSelect();
         break;
       }

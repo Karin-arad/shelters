@@ -78,90 +78,97 @@ class UI {
   // INSTRUCTIONS SCREEN
   // ============================================================
 
+  // --- Instructions Page 1: Controls & Goal ---
   drawInstructions(skyEffects) {
     const ctx = this.ctx;
-
-    // Background
-    this.renderer.drawSky();
-    if (skyEffects) skyEffects.draw(ctx);
-    this.renderer.drawDistantBuildings(0);
-    this.renderer.drawMidgroundBuildings(0);
-
-    // Dark overlay
-    ctx.fillStyle = 'rgba(15, 12, 10, 0.75)';
-    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    this._drawInstructionsBg(ctx, skyEffects);
 
     // Title
     ctx.fillStyle = COLORS.textPrimary;
-    ctx.font = 'bold 36px Arial';
+    ctx.font = 'bold 38px Arial';
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
-    ctx.fillText('?איך משחקים', CANVAS_WIDTH / 2, 45);
+    ctx.fillText('?איך משחקים', CANVAS_WIDTH / 2, 60);
     ctx.direction = 'ltr';
 
-    // === LEFT COLUMN: Controls ===
-    const leftX = 240;
-    let ly = 85;
+    // Controls — centered, big and clear
+    const cx = CANVAS_WIDTH / 2;
+    let y = 120;
 
     ctx.fillStyle = COLORS.success;
-    ctx.font = 'bold 22px Arial';
+    ctx.font = 'bold 26px Arial';
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
-    ctx.fillText('שליטה', leftX, ly);
+    ctx.fillText('שליטה', cx, y);
     ctx.direction = 'ltr';
-    ly += 35;
+    y += 50;
 
     // Arrow keys
-    this._drawKeyIcon(ctx, leftX - 100, ly - 14, 50, 28, '← →');
+    this._drawKeyIcon(ctx, cx - 55, y - 18, 60, 34, '← →');
     ctx.fillStyle = COLORS.textPrimary;
-    ctx.font = '18px Arial';
+    ctx.font = '22px Arial';
     ctx.textAlign = 'right';
     ctx.direction = 'rtl';
-    ctx.fillText('חיצים: תנועה', leftX + 100, ly + 5);
+    ctx.fillText('חיצים: תנועה', cx + 160, y + 2);
     ctx.direction = 'ltr';
-    ly += 42;
+    y += 55;
 
     // Space
-    this._drawKeyIcon(ctx, leftX - 100, ly - 14, 80, 28, 'SPACE');
+    this._drawKeyIcon(ctx, cx - 55, y - 18, 90, 34, 'SPACE');
     ctx.fillStyle = COLORS.textPrimary;
-    ctx.font = '18px Arial';
+    ctx.font = '22px Arial';
     ctx.textAlign = 'right';
     ctx.direction = 'rtl';
-    ctx.fillText('רווח: קפיצה', leftX + 100, ly + 5);
+    ctx.fillText('רווח: קפיצה', cx + 160, y + 2);
     ctx.direction = 'ltr';
-    ly += 42;
+    y += 55;
 
     // Enter
-    this._drawKeyIcon(ctx, leftX - 100, ly - 14, 70, 28, 'ENTER');
+    this._drawKeyIcon(ctx, cx - 55, y - 18, 80, 34, 'ENTER');
     ctx.fillStyle = COLORS.textPrimary;
-    ctx.font = '18px Arial';
+    ctx.font = '22px Arial';
     ctx.textAlign = 'right';
     ctx.direction = 'rtl';
-    ctx.fillText('אנטר: כניסה למקלט', leftX + 100, ly + 5);
+    ctx.fillText('אנטר: כניסה למקלט', cx + 160, y + 2);
     ctx.direction = 'ltr';
-    ly += 42;
+    y += 60;
 
     // Speed warning
     ctx.fillStyle = COLORS.warning;
-    ctx.font = '16px Arial';
+    ctx.font = 'bold 20px Arial';
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
-    ctx.fillText('!זהירות: ריצה מהירה מדי גורמת למעידות', leftX, ly + 5);
+    ctx.fillText('!זהירות: ריצה מהירה מדי גורמת למעידות', cx, y);
+    ctx.direction = 'ltr';
+    y += 50;
+
+    // Goal
+    ctx.fillStyle = COLORS.warning;
+    ctx.font = 'bold 24px Arial';
+    ctx.textAlign = 'center';
+    ctx.direction = 'rtl';
+    ctx.fillText('!המטרה: להגיע למקלט לפני שהזמן נגמר', cx, y);
     ctx.direction = 'ltr';
 
-    // === RIGHT COLUMN: Obstacles ===
-    const rightX = 720;
-    let ry = 85;
+    // Continue
+    this._drawContinuePrompt(ctx, '(1/2) לחצו להמשיך');
+    ctx.textAlign = 'left';
+    this.renderer.drawVignette();
+  }
 
+  // --- Instructions Page 2: Obstacles & Shelters ---
+  drawInstructions2(skyEffects) {
+    const ctx = this.ctx;
+    this._drawInstructionsBg(ctx, skyEffects);
+
+    // === Obstacles ===
     ctx.fillStyle = COLORS.danger;
-    ctx.font = 'bold 22px Arial';
+    ctx.font = 'bold 28px Arial';
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
-    ctx.fillText('מכשולים', rightX, ry);
+    ctx.fillText('מכשולים', CANVAS_WIDTH / 2, 55);
     ctx.direction = 'ltr';
-    ry += 32;
 
-    // Obstacle list
     const obstacles = [
       { icon: 'stroller', text: 'עגלת תינוק — קפוץ מעליה' },
       { icon: 'wet', text: '!רצפה רטובה — מחליקים' },
@@ -170,30 +177,28 @@ class UI {
       { icon: 'unwanted', text: 'שכנה מציקה — מאטה אותך' },
     ];
 
+    let oy = 90;
     for (const obs of obstacles) {
-      // Mini icon
-      this._drawObstacleIcon(ctx, rightX - 140, ry - 8, obs.icon);
-      // Text
+      this._drawObstacleIcon(ctx, CANVAS_WIDTH / 2 - 150, oy - 8, obs.icon);
       ctx.fillStyle = COLORS.textPrimary;
-      ctx.font = '16px Arial';
+      ctx.font = '20px Arial';
       ctx.textAlign = 'right';
       ctx.direction = 'rtl';
-      ctx.fillText(obs.text, rightX + 140, ry + 5);
+      ctx.fillText(obs.text, CANVAS_WIDTH / 2 + 200, oy + 6);
       ctx.direction = 'ltr';
-      ry += 30;
+      oy += 38;
     }
 
-    // === BOTTOM: Shelters ===
-    const shelterY = 340;
+    // === Shelters ===
+    const shelterY = oy + 20;
 
     ctx.fillStyle = '#5dade2';
-    ctx.font = 'bold 22px Arial';
+    ctx.font = 'bold 28px Arial';
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
     ctx.fillText('מקלטים', CANVAS_WIDTH / 2, shelterY);
     ctx.direction = 'ltr';
 
-    // Three shelter types
     const shelterTypes = [
       { x: CANVAS_WIDTH / 2 - 280, color: COLORS.success, glow: 'rgba(46,204,113,0.3)', label: '!מקלט אמיתי — היכנס', sign: 'מקלט' },
       { x: CANVAS_WIDTH / 2 - 30, color: COLORS.danger, glow: 'rgba(231,76,60,0.3)', label: '!לא מורשה — קנס זמן', sign: '!לא מורשה' },
@@ -201,34 +206,40 @@ class UI {
     ];
 
     for (const s of shelterTypes) {
-      this._drawMiniShelterDoor(ctx, s.x, shelterY + 15, s.color, s.glow, s.sign);
+      this._drawMiniShelterDoor(ctx, s.x, shelterY + 18, s.color, s.glow, s.sign);
       ctx.fillStyle = COLORS.textPrimary;
-      ctx.font = '14px Arial';
+      ctx.font = '15px Arial';
       ctx.textAlign = 'center';
       ctx.direction = 'rtl';
-      ctx.fillText(s.label, s.x + 25, shelterY + 95);
+      ctx.fillText(s.label, s.x + 25, shelterY + 100);
       ctx.direction = 'ltr';
     }
 
-    // === Goal ===
-    ctx.fillStyle = COLORS.warning;
-    ctx.font = 'bold 22px Arial';
-    ctx.textAlign = 'center';
-    ctx.direction = 'rtl';
-    ctx.fillText('!המטרה: להגיע למקלט לפני שהזמן נגמר', CANVAS_WIDTH / 2, 470);
-    ctx.direction = 'ltr';
+    // Continue
+    this._drawContinuePrompt(ctx, '(2/2) לחצו להתחיל');
+    ctx.textAlign = 'left';
+    this.renderer.drawVignette();
+  }
 
-    // Continue prompt
-    const continuePulse = Math.sin(Date.now() * 0.003) * 0.3 + 0.7;
-    ctx.globalAlpha = continuePulse;
+  _drawInstructionsBg(ctx, skyEffects) {
+    this.renderer.drawSky();
+    if (skyEffects) skyEffects.draw(ctx);
+    this.renderer.drawDistantBuildings(0);
+    this.renderer.drawMidgroundBuildings(0);
+    ctx.fillStyle = 'rgba(15, 12, 10, 0.75)';
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  }
+
+  _drawContinuePrompt(ctx, text) {
+    const pulse = Math.sin(Date.now() * 0.003) * 0.3 + 0.7;
+    ctx.globalAlpha = pulse;
     ctx.fillStyle = COLORS.textSecondary;
     ctx.font = '20px Arial';
     ctx.textAlign = 'center';
-    ctx.fillText('Click or press Enter to continue', CANVAS_WIDTH / 2, 510);
+    ctx.direction = 'rtl';
+    ctx.fillText(text, CANVAS_WIDTH / 2, CANVAS_HEIGHT - 20);
+    ctx.direction = 'ltr';
     ctx.globalAlpha = 1;
-
-    ctx.textAlign = 'left';
-    this.renderer.drawVignette();
   }
 
   _drawKeyIcon(ctx, x, y, w, h, label) {

@@ -254,6 +254,7 @@ const CHARACTERS = {
 const GameState = {
   MENU: 'menu',
   INSTRUCTIONS: 'instructions',
+  INSTRUCTIONS2: 'instructions2',
   SELECT: 'select',
   PLAYING: 'playing',
   STAIRWELL: 'stairwell',
