@@ -26,6 +26,10 @@ class Game {
 
     this.lastTime = 0;
 
+    // Direction arrow indicator
+    this.directionArrowTimer = 0;
+    this.directionArrowDir = 1;
+
     // Quiz state
     this.quizQuestion = null;
     this.quizOptions = []; // [{text, isCorrect}, {text, isCorrect}]
@@ -227,6 +231,9 @@ class Game {
   }
 
   _updatePlaying(dt) {
+    // Direction arrow countdown
+    if (this.directionArrowTimer > 0) this.directionArrowTimer -= dt;
+
     // Timer
     this.timer.update(dt);
     if (this.timer.isExpired()) {
@@ -340,12 +347,16 @@ class Game {
         // Initial stairwell: player is already on floor 0, just start playing
         this.isInitialStairwell = false;
         this.state = GameState.PLAYING;
+        this.directionArrowTimer = 2.5;
+        this.directionArrowDir = this.level.getCurrentFloor().direction;
       } else {
         const hasMore = this.level.advanceFloor(this.player);
         if (!hasMore) {
           this._triggerFailure();
         } else {
           this.state = GameState.PLAYING;
+          this.directionArrowTimer = 2.5;
+          this.directionArrowDir = this.level.getCurrentFloor().direction;
         }
       }
     }
@@ -469,6 +480,11 @@ class Game {
 
     // HUD (on top)
     this.ui.drawHUD(this.timer, this.level.currentFloor, this.player);
+
+    // Direction arrow indicator
+    if (this.directionArrowTimer > 0) {
+      this.ui.drawDirectionArrow(this.directionArrowDir, this.directionArrowTimer);
+    }
 
     this.renderer.drawVignette();
 

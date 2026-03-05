@@ -686,6 +686,54 @@ class UI {
   }
 
   // ============================================================
+  // DIRECTION ARROW
+  // ============================================================
+
+  drawDirectionArrow(dir, timer) {
+    const ctx = this.ctx;
+    const alpha = Math.min(timer / 0.5, 1); // fade out in last 0.5s
+    const bounce = Math.sin(Date.now() * 0.006) * 12;
+    const cx = dir > 0 ? CANVAS_WIDTH - 80 + bounce : 80 - bounce;
+    const cy = CANVAS_HEIGHT / 2;
+
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.85;
+
+    // Arrow background circle
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, 38, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Arrow
+    ctx.fillStyle = COLORS.warning;
+    ctx.beginPath();
+    if (dir > 0) {
+      // Right arrow →
+      ctx.moveTo(cx + 20, cy);
+      ctx.lineTo(cx - 8, cy - 18);
+      ctx.lineTo(cx - 8, cy - 8);
+      ctx.lineTo(cx - 20, cy - 8);
+      ctx.lineTo(cx - 20, cy + 8);
+      ctx.lineTo(cx - 8, cy + 8);
+      ctx.lineTo(cx - 8, cy + 18);
+    } else {
+      // Left arrow ←
+      ctx.moveTo(cx - 20, cy);
+      ctx.lineTo(cx + 8, cy - 18);
+      ctx.lineTo(cx + 8, cy - 8);
+      ctx.lineTo(cx + 20, cy - 8);
+      ctx.lineTo(cx + 20, cy + 8);
+      ctx.lineTo(cx + 8, cy + 8);
+      ctx.lineTo(cx + 8, cy + 18);
+    }
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  // ============================================================
   // QUIZ SCREEN
   // ============================================================
 
