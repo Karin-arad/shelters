@@ -24,14 +24,14 @@ const TRIP_CHANCE_PER_FRAME = 0.004;
 const TRIP_STUN_DURATION = 1.2;
 
 // --- Level ---
-const FLOOR_COUNT = 4;
+const FLOOR_COUNT = 5;
 const HALLWAY_LENGTH = 3200;
 const FLOOR_HEIGHT = 120;
 const GROUND_Y = CANVAS_HEIGHT - 90;
 const STAIRWELL_WIDTH = 160;
 
 // --- Timer ---
-const GAME_DURATION = 55;
+const GAME_DURATION = 65;
 
 // --- Obstacles ---
 const WET_STAIRS_SLIP_SPEED = 4.5;
