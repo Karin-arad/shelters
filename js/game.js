@@ -26,6 +26,9 @@ class Game {
 
     this.lastTime = 0;
 
+    // Touch controls (mobile)
+    this.touchControls = new TouchControls(canvas, this.input);
+
     // Click handler
     canvas.addEventListener('click', (e) => this._handleClick(e));
     canvas.addEventListener('mousemove', (e) => this._handleMouseMove(e));
@@ -370,6 +373,9 @@ class Game {
     this.ui.drawHUD(this.timer, this.level.currentFloor, this.player);
 
     this.renderer.drawVignette();
+
+    // Touch controls (drawn last, on top of everything)
+    this.touchControls.draw(this.renderer.ctx);
   }
 
   // ============================================================

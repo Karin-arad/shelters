@@ -31,6 +31,18 @@ class InputManager {
     return !!this.justPressedKeys[code];
   }
 
+  // Touch input simulation
+  simulateDown(code) {
+    if (!this.keys[code]) {
+      this._justPressedBuffer[code] = true;
+    }
+    this.keys[code] = true;
+  }
+
+  simulateUp(code) {
+    this.keys[code] = false;
+  }
+
   update() {
     this.justPressedKeys = this._justPressedBuffer;
     this._justPressedBuffer = {};

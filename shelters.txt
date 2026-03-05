@@ -1,0 +1,248 @@
+sPRD)
+Product Name
+מקלטים (Shelters)
+Version
+PRD v1.0 — March 2026
+
+1. Product Overview
+מקלטים is a dark-humor arcade endless runner survival game where the player must reach a bomb shelter before the countdown ends.
+The game reflects everyday Israeli life during sirens, turning stressful moments into absurd gameplay situations involving neighbors, building obstacles, and social awkwardness.
+Players navigate through chaotic apartment buildings while avoiding delays caused by neighbors, pets, and everyday building problems.
+The core experience focuses on fast, funny, replayable gameplay loops lasting 30–90 seconds.
+
+2. Product Vision
+Create a highly shareable, culturally authentic arcade game that captures the absurd humor of everyday life in Israel.
+The game should feel:
+Fast
+Funny
+Chaotic
+Relatable
+Replayable
+Target outcome: a viral indie browser game with strong cultural identity.
+
+3. Target Users
+Primary Users
+1. Israeli Gamers (Age 16–35)
+Players who recognize the cultural references and humor.
+2. Dark Humor Indie Game Audience
+Players who enjoy absurd, satirical indie games.
+3. Casual Browser Gamers
+Players looking for quick games playable in short sessions.
+
+4. Problem Statement
+There are very few games that represent authentic Israeli daily life and humor.
+Existing casual games rarely include:
+Local cultural references
+Familiar social situations
+Absurd neighborhood interactions
+This game fills that gap by transforming shared cultural experiences into comedic gameplay.
+
+5. Core Gameplay Loop
+1️⃣ Siren starts
+2️⃣ Countdown timer begins
+3️⃣ Player runs toward the shelter
+4️⃣ Player navigates obstacles and neighbors
+5️⃣ Player either:
+reaches the shelter (success)
+fails to arrive in time (failure)
+6️⃣ Player earns survival score
+7️⃣ Player unlocks upgrades or retries
+Game loop duration: 30–90 seconds
+
+6. Core Mechanics
+Movement
+Player automatically runs forward.
+Controls:
+Jump
+Slow down
+Speed up
+There is an optimal speed:
+Too fast → falling
+Too slow → timer expires
+
+Timer System
+Every run starts with a visible countdown timer.
+Features:
+Audible ticking
+Increasing tension
+Time varies by level difficulty
+Example:
+Level
+Time
+Low floor
+30 seconds
+Mid floors
+25 seconds
+High floors
+20 seconds
+
+
+Failure States
+Instead of traditional “death”, the game presents humorous failure messages.
+Examples:
+“You didn’t reach the shelter in time. The building is fine though.”
+“Sports injury. Terrible timing.”
+“Your neighbor asked how you're doing. 40 seconds passed.”
+
+7. Obstacles
+Building Obstacles
+Obstacle
+Effect
+Wet stairs
+Slipping risk if running too fast
+Baby stroller
+Blocks hallway
+Emergency door stuck
+Requires repeated input
+Elevator opening
+Dangerous temptation
+
+
+Neighbor NPCs
+NPC
+Behavior
+Solution
+Old neighbor
+Stops to talk
+Press SKIP quickly
+Mother with stroller
+Blocks hallway
+Jump over
+Neighbor dog
+Chases player
+Use biscuit item
+Slow locker
+Blocking shelter door
+Wait or push
+Social media neighbor
+Filming story
+Lose 3 seconds from embarrassment
+
+
+8. Boss Encounters
+Boss events appear every few levels.
+Examples:
+Boss
+Mechanic
+Building committee
+Requires quick signature interaction
+DHL delivery
+Must sign package
+Hard-of-hearing grandma
+Player must trigger alert repeatedly
+
+
+9. Progression System
+Players earn Survival Points after each run.
+Points unlock:
+Upgrades
+New environments
+Cosmetic improvements
+
+10. Upgrade System
+Upgrade
+Effect
+Running Shoes
++20% speed
+Earplugs
+Ignore certain neighbors
+Dog Biscuits
+Distract dog twice
+Airplane Mode
+Disable social media NPC
+Coffee
++10 seconds timer (single use)
+Shelter Key
+Skip shelter queue
+
+
+11. Game Environments
+Launch Environment (MVP)
+Apartment Building
+Difficulty based on floor levels.
+
+Future Environments
+Environment
+Description
+Old Tel Aviv building
+Broken stairs, poor lighting
+Shopping mall
+Multiple floors
+City street
+Cars and traffic
+Beach
+Sand slows movement
+
+
+12. MVP Scope
+Prototype Phase
+Features:
+Single building environment
+3 obstacles
+Countdown timer
+Success / failure screens
+
+Phase 2 (Polish)
+Add:
+Animations
+Sound effects
+Siren audio
+Humorous text events
+
+Phase 3 (Content)
+Add:
+Multiple environments
+Upgrade system
+Boss encounters
+Leaderboards
+
+13. Technical Requirements
+Platform: Desktop Web
+Technology stack:
+HTML5
+JavaScript
+Canvas or WebGL
+Lightweight physics system
+Possible frameworks:
+Phaser.js
+Three.js (if needed)
+Vanilla JS for simplicity
+
+14. Success Metrics
+Metric
+Target
+Average session length
+5–10 minutes
+Runs per session
+5+
+Completion rate
+40–60%
+Social shares
+High (viral humor potential)
+
+
+15. Risks
+Risk
+Mitigation
+Topic sensitivity
+Use satire and humor carefully
+Gameplay repetition
+Introduce varied NPC encounters
+Cultural specificity
+Keep humor accessible
+
+
+16. Future Expansion
+Potential future directions:
+Mobile version
+Steam indie release
+Additional cities
+Multiplayer race to shelter
+Community leaderboard
+
+17. Unique Selling Points
+Rare Israeli cultural humor in games
+Short chaotic gameplay loops
+Absurd NPC interactions
+High potential for viral sharing
+

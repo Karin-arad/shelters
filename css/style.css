@@ -20,4 +20,25 @@ body {
   box-shadow: 0 0 40px rgba(0, 0, 0, 0.6), 0 0 120px rgba(40, 30, 20, 0.3);
   cursor: pointer;
   image-rendering: auto;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (max-width: 999px) {
+  #gameCanvas {
+    width: 100vw;
+    height: auto;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  #gameCanvas {
+    height: 100vh;
+    width: auto;
+  }
 }
