@@ -77,7 +77,7 @@ class Game {
   _enterStairwell() {
     this.state = GameState.STAIRWELL;
     this.stairwellProgress = 0;
-    this.stairwellTimer = 1.2;
+    this.stairwellTimer = this.stairwellCelebration ? 2.0 : 1.2;
     // Pick a random stairwell event
     const events = ['neighbor', 'dog', 'flicker', 'yell'];
     this.stairwellEvent = {
@@ -133,9 +133,9 @@ class Game {
     if (this.quizOptions[optionIndex].isCorrect) {
       // Correct — enter shelter
       this.sheltersFound = (this.sheltersFound || 0) + 1;
-      this.ui.showMessage(`!מקלט ${this.sheltersFound} נמצא`, 2);
       this.timer.addBonus(15);
       this.level.extendFloors();
+      this.stairwellCelebration = true;
       this._enterStairwell();
     } else {
       // Wrong — visual flash + haptic vibration on mobile
@@ -263,6 +263,7 @@ class Game {
     // Level (camera, floor end check)
     const levelResult = this.level.update(this.player, dt);
     if (levelResult === 'end_of_hallway') {
+      this.stairwellCelebration = false;
       this._enterStairwell();
       return;
     }
@@ -339,10 +340,12 @@ class Game {
       return;
     }
 
+    const stairwellDuration = this.stairwellCelebration ? 2.0 : 1.2;
     this.stairwellTimer -= dt;
-    this.stairwellProgress = 1 - (this.stairwellTimer / 1.2);
+    this.stairwellProgress = 1 - (this.stairwellTimer / stairwellDuration);
 
     if (this.stairwellTimer <= 0) {
+      this.stairwellCelebration = false;
       if (this.isInitialStairwell) {
         // Initial stairwell: player is already on floor 0, just start playing
         this.isInitialStairwell = false;
@@ -399,6 +402,9 @@ class Game {
 
       case GameState.STAIRWELL:
         this.renderer.drawStairwell(this.stairwellProgress, this.stairwellEvent, this.selectedChar);
+        if (this.stairwellCelebration) {
+          this.ui.drawCelebration(this.stairwellProgress, this.sheltersFound);
+        }
         this.ui.drawHUD(this.timer, this.level.currentFloor, this.player);
         break;
 

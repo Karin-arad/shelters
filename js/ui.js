@@ -686,6 +686,74 @@ class UI {
   }
 
   // ============================================================
+  // CELEBRATION OVERLAY (after finding shelter)
+  // ============================================================
+
+  drawCelebration(progress, sheltersFound) {
+    const ctx = this.ctx;
+
+    // Golden glow overlay
+    const glowAlpha = Math.sin(progress * Math.PI) * 0.25;
+    ctx.fillStyle = `rgba(255, 200, 50, ${glowAlpha})`;
+    ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    ctx.save();
+
+    // Big shelter count — scales up then settles
+    const scale = progress < 0.3 ? 1 + (1 - progress / 0.3) * 0.5 : 1;
+    const alpha = progress < 0.1 ? progress / 0.1 : progress > 0.85 ? (1 - progress) / 0.15 : 1;
+    ctx.globalAlpha = alpha;
+
+    ctx.translate(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 - 30);
+    ctx.scale(scale, scale);
+
+    // Shelter count number
+    ctx.fillStyle = COLORS.success;
+    ctx.font = 'bold 72px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(sheltersFound, 0, 0);
+
+    // Label
+    ctx.fillStyle = COLORS.textPrimary;
+    ctx.font = 'bold 22px Arial';
+    ctx.direction = 'rtl';
+    ctx.fillText('!מקלטים', 0, 35);
+    ctx.direction = 'ltr';
+
+    // Bonus time text
+    ctx.fillStyle = COLORS.warning;
+    ctx.font = 'bold 20px Arial';
+    ctx.fillText('+15s', 0, 62);
+
+    ctx.restore();
+
+    // Sparkle particles
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.8;
+    const t = Date.now() * 0.001;
+    for (let i = 0; i < 12; i++) {
+      const angle = (i / 12) * Math.PI * 2 + t * 2;
+      const radius = 80 + Math.sin(t * 3 + i) * 30;
+      const sx = CANVAS_WIDTH / 2 + Math.cos(angle) * radius;
+      const sy = CANVAS_HEIGHT / 2 - 20 + Math.sin(angle) * radius * 0.5;
+      const size = 2 + Math.sin(t * 5 + i * 2) * 1.5;
+
+      ctx.fillStyle = i % 2 === 0 ? '#ffd700' : '#fff';
+      ctx.beginPath();
+      // Star shape
+      for (let p = 0; p < 4; p++) {
+        const a = (p / 4) * Math.PI * 2 + t * 3;
+        ctx.lineTo(sx + Math.cos(a) * size, sy + Math.sin(a) * size);
+        const a2 = a + Math.PI / 4;
+        ctx.lineTo(sx + Math.cos(a2) * size * 0.4, sy + Math.sin(a2) * size * 0.4);
+      }
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // ============================================================
   // DIRECTION ARROW
   // ============================================================
 
