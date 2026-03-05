@@ -48,6 +48,7 @@ class Game {
 
   _startGame(charDef) {
     this.selectedChar = charDef;
+    this.sheltersFound = 0;
     this.level = new Level();
     const floor = this.level.getCurrentFloor();
     const startX = floor.direction > 0 ? 80 : floor.hallwayLength - 80;
@@ -80,9 +81,15 @@ class Game {
   }
 
   _triggerSuccess() {
-    this.state = GameState.SUCCESS;
-    this.timer.stop();
-    this.siren.stop();
+    // Instead of ending, loop: generate more floors and continue
+    this.sheltersFound = (this.sheltersFound || 0) + 1;
+    this.doorSound.play();
+    this.ui.showMessage(`!מקלט ${this.sheltersFound} נמצא`, 2);
+    // Add bonus time for finding shelter
+    this.timer.addBonus(10);
+    // Generate new floors and continue
+    this.level.extendFloors();
+    this._enterStairwell();
   }
 
   _triggerFailure(message) {
@@ -152,7 +159,14 @@ class Game {
     // Timer
     this.timer.update(dt);
     if (this.timer.isExpired()) {
-      this._triggerFailure();
+      if (this.sheltersFound > 0) {
+        // Found at least one shelter — show score
+        this.state = GameState.SUCCESS;
+        this.timer.stop();
+        this.siren.stop();
+      } else {
+        this._triggerFailure();
+      }
       return;
     }
 
@@ -202,7 +216,6 @@ class Game {
 
       const result = shelter.checkEntry(this.player, this.input);
       if (result === 'success') {
-        this.doorSound.play();
         this._triggerSuccess();
         return;
       } else if (result === 'unauthorized') {
@@ -308,7 +321,7 @@ class Game {
         break;
 
       case GameState.SUCCESS:
-        this.ui.drawSuccess(this.timer, this.selectedChar);
+        this.ui.drawSuccess(this.timer, this.selectedChar, this.sheltersFound);
         break;
 
       case GameState.FAILURE:

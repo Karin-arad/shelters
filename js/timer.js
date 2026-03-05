@@ -41,6 +41,10 @@ class GameTimer {
     if (this.remaining < 0) this.remaining = 0;
   }
 
+  addBonus(seconds) {
+    this.remaining += seconds;
+  }
+
   isExpired() {
     return this.remaining <= 0;
   }

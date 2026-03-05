@@ -232,7 +232,7 @@ class Level {
 
   advanceFloor(player) {
     this.currentFloor++;
-    if (this.currentFloor >= FLOOR_COUNT) {
+    if (this.currentFloor >= this.floors.length) {
       return false; // no more floors
     }
 
@@ -259,6 +259,42 @@ class Level {
   }
 
   isLastFloor() {
-    return this.currentFloor >= FLOOR_COUNT - 1;
+    return this.currentFloor >= this.floors.length - 1;
+  }
+
+  extendFloors() {
+    // Add more floors to keep the game going
+    const startIndex = this.floors.length;
+    for (let i = 0; i < FLOOR_COUNT; i++) {
+      const globalIndex = startIndex + i;
+      const direction = (globalIndex % 2 === 0) ? 1 : -1;
+      const floor = {
+        index: globalIndex,
+        direction: direction,
+        hallwayLength: HALLWAY_LENGTH,
+        obstacles: [],
+        shelters: [],
+      };
+      this._placeObstacles(floor);
+      this._placeShelters(floor, i); // use local index so last floor gets end shelters
+      this.floors.push(floor);
+    }
+    // Last new floor gets end shelters
+    this._placeEndShelters(this.floors[this.floors.length - 1]);
+
+    // Add more background NPCs for new floors
+    for (let fi = startIndex; fi < this.floors.length; fi++) {
+      const count = randomInt(3, 6);
+      for (let i = 0; i < count; i++) {
+        this.backgroundNPCs.push({
+          floorIndex: fi,
+          x: 200 + Math.random() * (HALLWAY_LENGTH - 400),
+          speed: randomFloat(1.5, 4),
+          seed: randomInt(0, 99999),
+          running: Math.random() > 0.3,
+          direction: Math.random() > 0.5 ? 1 : -1,
+        });
+      }
+    }
   }
 }

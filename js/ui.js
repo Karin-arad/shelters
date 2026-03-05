@@ -564,7 +564,7 @@ class UI {
   // SUCCESS SCREEN
   // ============================================================
 
-  drawSuccess(timer, charDef) {
+  drawSuccess(timer, charDef, sheltersFound) {
     const ctx = this.ctx;
 
     // Green tinted overlay
@@ -594,10 +594,12 @@ class UI {
     ctx.font = '26px Arial';
     ctx.fillText(STRINGS.successSubtitle, CANVAS_WIDTH / 2, 225);
 
-    // Time remaining
+    // Score — shelters found
     ctx.fillStyle = COLORS.textPrimary;
-    ctx.font = 'bold 30px Arial';
-    ctx.fillText(`Time left: ${timer.getFormatted()}`, CANVAS_WIDTH / 2, 270);
+    ctx.font = 'bold 36px Arial';
+    ctx.direction = 'rtl';
+    ctx.fillText(`${sheltersFound || 0} :מקלטים`, CANVAS_WIDTH / 2, 270);
+    ctx.direction = 'ltr';
 
     // Character celebration
     if (charDef) {

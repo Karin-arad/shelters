@@ -57,11 +57,11 @@ const SHELTER_SLOWDOWN_RANGE = 200;
 const SHELTER_SLOWDOWN_FACTOR = 0.93;
 
 // --- Missiles & Sky Effects ---
-const MISSILE_SPAWN_INTERVAL_MIN = 2;
-const MISSILE_SPAWN_INTERVAL_MAX = 5;
-const MISSILE_SPEED = 80;
-const MAX_ACTIVE_MISSILES = 4;
-const EXPLOSION_DURATION = 1.2;
+const MISSILE_SPAWN_INTERVAL_MIN = 1.0;
+const MISSILE_SPAWN_INTERVAL_MAX = 3;
+const MISSILE_SPEED = 110;
+const MAX_ACTIVE_MISSILES = 6;
+const EXPLOSION_DURATION = 2.0;
 
 // --- Colors (Machinarium-inspired urban palette) ---
 const COLORS = {

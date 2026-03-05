@@ -1209,6 +1209,7 @@ class SkyEffects {
       if (dist < 20 || ic.life <= 0) {
         this._spawnExplosion(ic.x, ic.y);
         this._explosionSound.play();
+        ScreenShake.trigger(4, 0.25);
         this.interceptions.splice(i, 1);
       }
     }
@@ -1217,7 +1218,7 @@ class SkyEffects {
     for (let i = this.explosions.length - 1; i >= 0; i--) {
       const ex = this.explosions[i];
       ex.life -= dt;
-      ex.radius += 70 * dt;
+      ex.radius += 120 * dt;
       if (ex.life <= 0) {
         this.explosions.splice(i, 1);
       }
@@ -1270,108 +1271,128 @@ class SkyEffects {
   }
 
   draw(ctx) {
-    // Missile trails — BIGGER
+    // Missile trails
     for (const m of this.missiles) {
       ctx.save();
-      const trailLen = 45;
+      const trailLen = 70;
       const trailDir = m.vx > 0 ? trailLen : -trailLen;
       const grad = ctx.createLinearGradient(
         m.x - trailDir, m.y, m.x, m.y
       );
-      grad.addColorStop(0, 'rgba(255, 150, 50, 0)');
-      grad.addColorStop(1, 'rgba(255, 200, 80, 0.8)');
+      grad.addColorStop(0, 'rgba(255, 120, 30, 0)');
+      grad.addColorStop(0.5, 'rgba(255, 180, 60, 0.5)');
+      grad.addColorStop(1, 'rgba(255, 220, 100, 0.95)');
       ctx.strokeStyle = grad;
-      ctx.lineWidth = 3.5;
+      ctx.lineWidth = 5;
       ctx.beginPath();
       ctx.moveTo(m.x - trailDir, m.y - m.vy / Math.abs(m.vx) * trailLen);
       ctx.lineTo(m.x, m.y);
       ctx.stroke();
 
-      // Glow
-      ctx.fillStyle = 'rgba(255, 200, 100, 0.3)';
+      // Outer glow
+      ctx.fillStyle = 'rgba(255, 180, 60, 0.25)';
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, 16, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Inner glow
+      ctx.fillStyle = 'rgba(255, 220, 120, 0.5)';
       ctx.beginPath();
       ctx.arc(m.x, m.y, 8, 0, Math.PI * 2);
       ctx.fill();
 
-      // Head — bigger
+      // Head
       ctx.fillStyle = '#fff';
       ctx.beginPath();
-      ctx.arc(m.x, m.y, 4, 0, Math.PI * 2);
+      ctx.arc(m.x, m.y, 5, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
 
-    // Interception streaks — BIGGER
+    // Interception streaks
     for (const ic of this.interceptions) {
       ctx.save();
       const grad = ctx.createLinearGradient(
-        ic.x - ic.vx * 0.15, ic.y - ic.vy * 0.15,
+        ic.x - ic.vx * 0.2, ic.y - ic.vy * 0.2,
         ic.x, ic.y
       );
       grad.addColorStop(0, 'rgba(255, 255, 255, 0)');
-      grad.addColorStop(1, 'rgba(255, 255, 255, 0.8)');
+      grad.addColorStop(1, 'rgba(255, 255, 255, 0.9)');
       ctx.strokeStyle = grad;
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 4;
       ctx.beginPath();
-      ctx.moveTo(ic.x - ic.vx * 0.2, ic.y - ic.vy * 0.2);
+      ctx.moveTo(ic.x - ic.vx * 0.25, ic.y - ic.vy * 0.25);
       ctx.lineTo(ic.x, ic.y);
       ctx.stroke();
 
       // Smoke puffs along trail
-      ctx.fillStyle = 'rgba(200, 200, 200, 0.15)';
-      for (let p = 0; p < 3; p++) {
-        const px = ic.x - ic.vx * 0.05 * (p + 1);
-        const py = ic.y - ic.vy * 0.05 * (p + 1);
+      ctx.fillStyle = 'rgba(200, 200, 200, 0.2)';
+      for (let p = 0; p < 4; p++) {
+        const px = ic.x - ic.vx * 0.06 * (p + 1);
+        const py = ic.y - ic.vy * 0.06 * (p + 1);
         ctx.beginPath();
-        ctx.arc(px, py, 3 + p * 2, 0, Math.PI * 2);
+        ctx.arc(px, py, 4 + p * 3, 0, Math.PI * 2);
         ctx.fill();
       }
 
       // Head
-      ctx.fillStyle = 'rgba(255, 255, 220, 0.95)';
+      ctx.fillStyle = 'rgba(255, 255, 220, 1)';
       ctx.beginPath();
-      ctx.arc(ic.x, ic.y, 3, 0, Math.PI * 2);
+      ctx.arc(ic.x, ic.y, 4, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
 
-    // Explosions — BIGGER
+    // Explosions
     for (const ex of this.explosions) {
       ctx.save();
       const progress = 1 - (ex.life / ex.maxLife);
 
-      // Bright flash
-      if (progress < 0.15) {
-        const flash = 1 - progress / 0.15;
-        ctx.globalAlpha = flash * 0.8;
+      // Bright flash — wide area
+      if (progress < 0.2) {
+        const flash = 1 - progress / 0.2;
+        ctx.globalAlpha = flash * 0.9;
         ctx.fillStyle = '#fff';
         ctx.beginPath();
-        ctx.arc(ex.x, ex.y, ex.radius * 2, 0, Math.PI * 2);
+        ctx.arc(ex.x, ex.y, ex.radius * 3, 0, Math.PI * 2);
         ctx.fill();
       }
 
       // Fire ball
-      ctx.globalAlpha = (1 - progress) * 0.85;
+      ctx.globalAlpha = (1 - progress) * 0.9;
       const fireGrad = ctx.createRadialGradient(ex.x, ex.y, 0, ex.x, ex.y, ex.radius);
-      fireGrad.addColorStop(0, `rgba(255, 240, 100, ${1 - progress})`);
-      fireGrad.addColorStop(0.3, `rgba(255, 160, 40, ${(1 - progress) * 0.8})`);
-      fireGrad.addColorStop(0.6, `rgba(200, 60, 20, ${(1 - progress) * 0.5})`);
-      fireGrad.addColorStop(1, 'rgba(80, 20, 5, 0)');
+      fireGrad.addColorStop(0, `rgba(255, 255, 180, ${1 - progress})`);
+      fireGrad.addColorStop(0.2, `rgba(255, 200, 60, ${(1 - progress) * 0.9})`);
+      fireGrad.addColorStop(0.5, `rgba(255, 120, 30, ${(1 - progress) * 0.7})`);
+      fireGrad.addColorStop(0.75, `rgba(200, 50, 10, ${(1 - progress) * 0.4})`);
+      fireGrad.addColorStop(1, 'rgba(60, 15, 5, 0)');
       ctx.fillStyle = fireGrad;
       ctx.beginPath();
       ctx.arc(ex.x, ex.y, ex.radius, 0, Math.PI * 2);
       ctx.fill();
 
+      // Smoke ring
+      if (progress > 0.15 && progress < 0.8) {
+        const smokeAlpha = (1 - (progress - 0.15) / 0.65) * 0.3;
+        ctx.globalAlpha = smokeAlpha;
+        ctx.strokeStyle = `rgba(80, 70, 60, ${smokeAlpha})`;
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.arc(ex.x, ex.y, ex.radius * 1.3, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
       // Sparks
-      if (progress < 0.5) {
-        ctx.fillStyle = `rgba(255, 200, 50, ${(1 - progress * 2) * 0.6})`;
-        for (let s = 0; s < 6; s++) {
-          const angle = (s / 6) * Math.PI * 2 + progress * 3;
-          const sparkDist = ex.radius * (0.8 + progress * 0.5);
+      if (progress < 0.6) {
+        ctx.globalAlpha = (1 - progress / 0.6) * 0.8;
+        ctx.fillStyle = `rgba(255, 220, 80, ${(1 - progress / 0.6) * 0.8})`;
+        for (let s = 0; s < 10; s++) {
+          const angle = (s / 10) * Math.PI * 2 + progress * 4;
+          const sparkDist = ex.radius * (0.7 + progress * 0.8);
           const sparkX = ex.x + Math.cos(angle) * sparkDist;
           const sparkY = ex.y + Math.sin(angle) * sparkDist;
           ctx.beginPath();
-          ctx.arc(sparkX, sparkY, 2, 0, Math.PI * 2);
+          ctx.arc(sparkX, sparkY, 3, 0, Math.PI * 2);
           ctx.fill();
         }
       }
