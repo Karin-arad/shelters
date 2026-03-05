@@ -407,7 +407,7 @@ class Renderer {
 
   drawHaze() {
     const ctx = this.ctx;
-    ctx.fillStyle = COLORS.haze;
+    ctx.fillStyle = 'rgba(160, 150, 140, 0.12)';
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   }
 
@@ -418,7 +418,7 @@ class Renderer {
       CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, CANVAS_WIDTH * 0.7
     );
     grad.addColorStop(0, 'rgba(0,0,0,0)');
-    grad.addColorStop(1, 'rgba(0,0,0,0.35)');
+    grad.addColorStop(1, 'rgba(0,0,0,0.2)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   }
@@ -1063,9 +1063,13 @@ class Renderer {
       ctx.save();
       ctx.globalAlpha = alpha;
       ctx.fillStyle = ft.color;
-      ctx.font = 'bold 18px Arial';
+      ctx.font = 'bold 24px Arial';
       ctx.direction = 'rtl';
       ctx.textAlign = 'center';
+      // Draw with dark outline for readability
+      ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+      ctx.lineWidth = 3;
+      ctx.strokeText(ft.text, ft.x - cameraX, ft.y);
       ctx.fillText(ft.text, ft.x - cameraX, ft.y);
       ctx.direction = 'ltr';
       ctx.textAlign = 'left';

@@ -15,6 +15,12 @@ class CharacterRenderer {
       ctx.translate(-(x + PLAYER_WIDTH / 2), 0);
     }
 
+    // Dark outline for contrast against background
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
+    ctx.shadowBlur = 4;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 1;
+
     const bobY = state === 'running' ? Math.sin(animFrame * 12) * 2 : 0;
     const lean = state === 'running' ? 3 : 0;
 

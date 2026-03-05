@@ -109,8 +109,8 @@ const COLORS = {
   cable: '#3a3a3a',
 
   // Player
-  tracksuitMale: '#3a5a8c',
-  tracksuitFemale: '#8c3a5a',
+  tracksuitMale: '#4a7abf',
+  tracksuitFemale: '#bf4a7a',
   skin: '#d4a878',
   skinShadow: '#b88a60',
   hair: '#3a2a1a',

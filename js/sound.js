@@ -14,9 +14,8 @@ const SharedAudio = {
     return this.ctx;
   },
   unlock() {
-    if (this.ctx && this.ctx.state === 'suspended') {
-      this.ctx.resume();
-    }
+    // Create context eagerly on first gesture so it's ready when sounds play
+    this.get();
   }
 };
 

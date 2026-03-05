@@ -484,10 +484,10 @@ class UI {
     ctx.globalAlpha = 1;
 
     // Floor indicator
-    ctx.font = 'bold 20px Arial';
+    ctx.font = 'bold 24px Arial';
     ctx.fillStyle = COLORS.textSecondary;
     ctx.textAlign = 'center';
-    ctx.fillText(`${STRINGS.floorLabel} ${FLOOR_COUNT - currentFloor}`, CANVAS_WIDTH / 2, 37);
+    ctx.fillText(`${STRINGS.floorLabel} ${FLOOR_COUNT - currentFloor}`, CANVAS_WIDTH / 2, 38);
 
     // Speed bar
     const barX = CANVAS_WIDTH - 200;
@@ -526,15 +526,21 @@ class UI {
     ctx.textAlign = 'left';
 
 
-    // Message display
+    // Message display — large, at top below HUD bar
     if (this.messageTimer > 0) {
       ctx.save();
       ctx.globalAlpha = clamp(this.messageTimer / 0.5, 0, 1);
+
+      // Background strip for readability
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      drawRoundedRect(ctx, CANVAS_WIDTH / 2 - 250, 58, 500, 40, 8);
+      ctx.fill();
+
       ctx.fillStyle = COLORS.warning;
-      ctx.font = 'bold 24px Arial';
+      ctx.font = 'bold 28px Arial';
       ctx.textAlign = 'center';
       ctx.direction = 'rtl';
-      ctx.fillText(this.currentMessage, CANVAS_WIDTH / 2, 85);
+      ctx.fillText(this.currentMessage, CANVAS_WIDTH / 2, 86);
       ctx.direction = 'ltr';
       ctx.textAlign = 'left';
       ctx.restore();
@@ -691,16 +697,18 @@ class UI {
       ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     }
 
-    // "Choose a shelter!" text
+    // "Choose a shelter!" text — large and readable at top
+    ctx.save();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    drawRoundedRect(ctx, CANVAS_WIDTH / 2 - 200, 58, 400, 42, 8);
+    ctx.fill();
     ctx.fillStyle = COLORS.warning;
-    ctx.font = 'bold 32px Arial';
+    ctx.font = 'bold 36px Arial';
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
-    ctx.fillText('!בחר מקלט', CANVAS_WIDTH / 2, 62);
-    ctx.font = 'bold 22px Arial';
-    ctx.fillStyle = COLORS.textSecondary;
+    ctx.fillText('!בחר מקלט', CANVAS_WIDTH / 2, 90);
     ctx.direction = 'ltr';
-    ctx.fillText('Press Enter \u21b5 near a door', CANVAS_WIDTH / 2, 86);
     ctx.textAlign = 'left';
+    ctx.restore();
   }
 }
