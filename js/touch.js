@@ -9,12 +9,15 @@ class TouchControls {
     this.isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     this.activeTouches = {};
 
-    // Button definitions (canvas coordinates)
+    // Button definitions (canvas coordinates) — large for mobile thumbs
+    const pad = 15;
+    const btnH = 85;
+    const btnW = 95;
     this.buttons = {
-      left:  { x: 20,  y: CANVAS_HEIGHT - 90, w: 70, h: 70, code: 'ArrowLeft',  label: '←', pressed: false },
-      right: { x: 100, y: CANVAS_HEIGHT - 90, w: 70, h: 70, code: 'ArrowRight', label: '→', pressed: false },
-      jump:  { x: CANVAS_WIDTH - 100, y: CANVAS_HEIGHT - 90, w: 80, h: 80, code: 'Space', label: '⬆', pressed: false, round: true },
-      enter: { x: CANVAS_WIDTH - 100, y: CANVAS_HEIGHT - 155, w: 80, h: 50, code: 'Enter', label: '↵', pressed: false },
+      left:  { x: pad, y: CANVAS_HEIGHT - pad - btnH, w: btnW, h: btnH, code: 'ArrowLeft',  label: '←', pressed: false },
+      right: { x: pad + btnW + 10, y: CANVAS_HEIGHT - pad - btnH, w: btnW, h: btnH, code: 'ArrowRight', label: '→', pressed: false },
+      jump:  { x: CANVAS_WIDTH - pad - 105, y: CANVAS_HEIGHT - pad - 105, w: 105, h: 105, code: 'Space', label: 'JUMP', pressed: false, round: true },
+      enter: { x: CANVAS_WIDTH - pad - 200, y: CANVAS_HEIGHT - pad - 75, w: 85, h: 75, code: 'Enter', label: 'מקלט', pressed: false, color: 'rgba(46, 204, 113,' },
     };
 
     if (this.isTouchDevice) {
@@ -119,7 +122,8 @@ class TouchControls {
 
     ctx.save();
     for (const [name, btn] of Object.entries(this.buttons)) {
-      const alpha = btn.pressed ? 0.5 : 0.25;
+      const alpha = btn.pressed ? 0.55 : 0.3;
+      const baseColor = btn.color || 'rgba(255, 255, 255,';
 
       if (btn.round) {
         // Circle button (jump)
@@ -128,30 +132,30 @@ class TouchControls {
         const r = btn.w / 2;
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fillStyle = `${baseColor} ${alpha})`;
         ctx.fill();
-        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha + 0.15})`;
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = `${baseColor} ${alpha + 0.2})`;
+        ctx.lineWidth = 3;
         ctx.stroke();
 
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha + 0.3})`;
-        ctx.font = 'bold 28px sans-serif';
+        ctx.fillStyle = `${baseColor} ${alpha + 0.4})`;
+        ctx.font = 'bold 22px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(btn.label, cx, cy);
       } else {
         // Rounded rectangle button
-        const r = 10;
+        const r = 12;
         ctx.beginPath();
         ctx.roundRect(btn.x, btn.y, btn.w, btn.h, r);
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fillStyle = `${baseColor} ${alpha})`;
         ctx.fill();
-        ctx.strokeStyle = `rgba(255, 255, 255, ${alpha + 0.15})`;
-        ctx.lineWidth = 2;
+        ctx.strokeStyle = `${baseColor} ${alpha + 0.2})`;
+        ctx.lineWidth = 3;
         ctx.stroke();
 
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha + 0.3})`;
-        ctx.font = name === 'enter' ? 'bold 22px sans-serif' : 'bold 30px sans-serif';
+        ctx.fillStyle = `${baseColor} ${alpha + 0.4})`;
+        ctx.font = name === 'enter' ? 'bold 20px sans-serif' : 'bold 34px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2);
