@@ -110,18 +110,24 @@ class Level {
       if (attempts < 30) positions.push(pos);
     }
 
-    // Bias toward decoys: 60% unauthorized, 25% hidden, 15% real
-    for (const pos of positions) {
-      const roll = Math.random();
+    // Guarantee at least one enterable shelter per floor
+    // First shelter: 60% hidden, 40% real
+    // Rest: decoys (60% unauthorized, 25% hidden, 15% real)
+    for (let i = 0; i < positions.length; i++) {
       let type;
-      if (roll < 0.60) {
-        type = ShelterType.UNAUTHORIZED;
-      } else if (roll < 0.85) {
-        type = ShelterType.HIDDEN;
+      if (i === 0) {
+        type = Math.random() < 0.6 ? ShelterType.HIDDEN : ShelterType.REAL;
       } else {
-        type = ShelterType.REAL;
+        const roll = Math.random();
+        if (roll < 0.70) {
+          type = ShelterType.UNAUTHORIZED;
+        } else if (roll < 0.90) {
+          type = ShelterType.HIDDEN;
+        } else {
+          type = ShelterType.REAL;
+        }
       }
-      floor.shelters.push(new Shelter(pos, type));
+      floor.shelters.push(new Shelter(positions[i], type));
     }
   }
 
