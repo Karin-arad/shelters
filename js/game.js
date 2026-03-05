@@ -443,17 +443,21 @@ class Game {
       }
 
       case GameState.PLAYING: {
-        // Tap on shelter door to enter
-        if (this._nearbyShelterX != null) {
+        // Tap on shelter door — directly check all shelters (avoids async race condition)
+        const floor = this.level.getCurrentFloor();
+        for (const shelter of floor.shelters) {
+          if (!shelter.active || shelter.entered) continue;
+          const dist = Math.abs(this.player.getCenterX() - (shelter.x + shelter.width / 2));
+          if (dist > SHELTER_INTERACT_RANGE) continue;
+          const sx = shelter.x - this.level.cameraX;
           const doorBounds = {
-            x: this._nearbyShelterX - 20,
-            y: GROUND_Y - SHELTER_HEIGHT - 20,
-            width: SHELTER_WIDTH + 40,
-            height: SHELTER_HEIGHT + 40,
+            x: sx - 20, y: GROUND_Y - SHELTER_HEIGHT - 20,
+            width: SHELTER_WIDTH + 40, height: SHELTER_HEIGHT + 40,
           };
           if (this._isInBounds(pos, doorBounds)) {
             this.input.simulateDown('Enter');
             setTimeout(() => this.input.simulateUp('Enter'), 100);
+            break;
           }
         }
         break;

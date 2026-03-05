@@ -11,8 +11,8 @@ const PLAYER_HEIGHT = 52;
 const PLAYER_BASE_SPEED = 2.0;       // recovery speed after stun
 const PLAYER_MIN_SPEED = 0;          // can stand still
 const PLAYER_MAX_SPEED = 7;
-const PLAYER_OPTIMAL_SPEED_MIN = 2.5;
-const PLAYER_OPTIMAL_SPEED_MAX = 5;
+const PLAYER_OPTIMAL_SPEED_MIN = 3.0;
+const PLAYER_OPTIMAL_SPEED_MAX = 4.5;
 const PLAYER_INITIAL_SPEED = 1.5;    // instant speed on first key press
 const PLAYER_ACCEL_RATE = 0.12;      // acceleration while holding direction
 const PLAYER_DECEL_RATE = 0.25;      // deceleration when releasing keys
@@ -20,18 +20,18 @@ const PLAYER_TURN_PENALTY = 0.5;     // speed multiplier when reversing
 const HALLWAY_START_WALL = 40;       // wall boundary at start of hallway
 const JUMP_FORCE = -11;
 const GRAVITY = 0.55;
-const TRIP_CHANCE_PER_FRAME = 0.003;
+const TRIP_CHANCE_PER_FRAME = 0.004;
 const TRIP_STUN_DURATION = 1.2;
 
 // --- Level ---
 const FLOOR_COUNT = 4;
-const HALLWAY_LENGTH = 2800;
+const HALLWAY_LENGTH = 3200;
 const FLOOR_HEIGHT = 120;
 const GROUND_Y = CANVAS_HEIGHT - 90;
 const STAIRWELL_WIDTH = 160;
 
 // --- Timer ---
-const GAME_DURATION = 60;
+const GAME_DURATION = 55;
 
 // --- Obstacles ---
 const WET_STAIRS_SLIP_SPEED = 4.5;
@@ -43,15 +43,15 @@ const HOMELESS_WIDTH = 70;
 const HOMELESS_HEIGHT = 25;
 const UNWANTED_NEIGHBOR_DETECT_RANGE = 150;
 const UNWANTED_NEIGHBOR_TIME_PENALTY = 3;
-const NPC_HIT_TIME_PENALTY = 2.5;
-const NPC_HIT_SPEED_THRESHOLD = 5.5;
+const NPC_HIT_TIME_PENALTY = 3;
+const NPC_HIT_SPEED_THRESHOLD = 5.0;
 
 // --- Shelters ---
 const SHELTER_WIDTH = 70;
 const SHELTER_HEIGHT = 80;
-const UNAUTHORIZED_PENALTY = 4;
+const UNAUTHORIZED_PENALTY = 5;
 const SHELTERS_PER_FLOOR = 1; // 0-1 shelters scattered per floor
-const END_SHELTER_COUNT = 3;
+const END_SHELTER_COUNT = 4;
 const SHELTER_INTERACT_RANGE = 120;
 const SHELTER_SLOWDOWN_RANGE = 200;
 const SHELTER_SLOWDOWN_FACTOR = 0.93;

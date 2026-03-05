@@ -37,9 +37,11 @@ class Level {
   }
 
   _placeObstacles(floor) {
-    const count = 3 + randomInt(0, 2); // 3-5 obstacles per floor
-    const minSpacing = 350;
-    const margin = 300;
+    // More obstacles on later floors: 5-7 early, 7-9 late
+    const baseCount = 5 + Math.floor(floor.index * 0.75);
+    const count = baseCount + randomInt(0, 2);
+    const minSpacing = 250;
+    const margin = 250;
     const available = floor.hallwayLength - margin * 2;
 
     const positions = [];
@@ -91,37 +93,51 @@ class Level {
   }
 
   _placeShelters(floor, floorIndex) {
-    // Always place 1-2 shelters mid-floor (not on last floor which has end shelters)
     if (floorIndex >= FLOOR_COUNT - 1) return;
 
-    // Guarantee at least 1 shelter, 50% chance of a second
-    const count = Math.random() < 0.5 ? 2 : 1;
+    // 2-3 shelters per mid-floor (more decoys to confuse)
+    const count = 2 + (Math.random() < 0.5 ? 1 : 0);
     const positions = [];
 
     for (let i = 0; i < count; i++) {
       let pos;
       let attempts = 0;
       do {
-        pos = 600 + Math.random() * (floor.hallwayLength - 1200);
+        // Place deeper into hallway — minimum 1000px in
+        pos = 1000 + Math.random() * (floor.hallwayLength - 1600);
         attempts++;
       } while (attempts < 30 && positions.some(p => Math.abs(p - pos) < 400));
       if (attempts < 30) positions.push(pos);
     }
 
-    const types = [ShelterType.REAL, ShelterType.UNAUTHORIZED, ShelterType.HIDDEN];
+    // Bias toward decoys: 60% unauthorized, 25% hidden, 15% real
     for (const pos of positions) {
-      const type = randomChoice(types);
+      const roll = Math.random();
+      let type;
+      if (roll < 0.60) {
+        type = ShelterType.UNAUTHORIZED;
+      } else if (roll < 0.85) {
+        type = ShelterType.HIDDEN;
+      } else {
+        type = ShelterType.REAL;
+      }
       floor.shelters.push(new Shelter(pos, type));
     }
   }
 
   _placeEndShelters(floor) {
-    const baseX = floor.hallwayLength - 400;
-    const spacing = 120;
+    // 4 shelters spread apart — 1 real, 2 unauthorized, 1 hidden
+    const spacing = 160;
+    const totalWidth = (END_SHELTER_COUNT - 1) * spacing;
+    const baseX = floor.hallwayLength - 200 - totalWidth;
 
-    // Always one real, one unauthorized, one hidden — shuffled
-    const types = [ShelterType.REAL, ShelterType.UNAUTHORIZED, ShelterType.HIDDEN];
-    // Shuffle
+    const types = [
+      ShelterType.REAL,
+      ShelterType.UNAUTHORIZED,
+      ShelterType.UNAUTHORIZED,
+      ShelterType.HIDDEN,
+    ];
+    // Fisher-Yates shuffle
     for (let i = types.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [types[i], types[j]] = [types[j], types[i]];
