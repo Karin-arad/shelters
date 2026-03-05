@@ -56,8 +56,8 @@ class TouchControls {
           this.input.simulateDown(btn.code);
         }
       } else {
-        // Tap outside buttons = general tap (for menus)
-        this.activeTouches[touch.identifier] = '__tap__';
+        // Tap outside buttons — store touch position for click simulation
+        this.activeTouches[touch.identifier] = { type: '__tap__', clientX: touch.clientX, clientY: touch.clientY };
       }
     }
   }
@@ -66,11 +66,12 @@ class TouchControls {
     e.preventDefault();
     for (const touch of e.changedTouches) {
       const pos = this._canvasPos(touch);
-      const prevBtn = this.activeTouches[touch.identifier];
+      const prev = this.activeTouches[touch.identifier];
+      const prevBtn = (typeof prev === 'string') ? prev : null;
       const currBtn = this._hitTest(pos);
 
       // If finger moved off a button, release it
-      if (prevBtn && prevBtn !== '__tap__' && prevBtn !== currBtn) {
+      if (prevBtn && prevBtn !== currBtn) {
         const btn = this.buttons[prevBtn];
         btn.pressed = false;
         this.input.simulateUp(btn.code);
@@ -85,7 +86,8 @@ class TouchControls {
         }
         this.activeTouches[touch.identifier] = currBtn;
       } else if (!currBtn) {
-        this.activeTouches[touch.identifier] = '__tap__';
+        // Finger moved — cancel tap (it's a drag, not a tap)
+        this.activeTouches[touch.identifier] = null;
       }
     }
   }
@@ -93,11 +95,20 @@ class TouchControls {
   _onTouchEnd(e) {
     e.preventDefault();
     for (const touch of e.changedTouches) {
-      const btnName = this.activeTouches[touch.identifier];
-      if (btnName && btnName !== '__tap__') {
-        const btn = this.buttons[btnName];
-        btn.pressed = false;
-        this.input.simulateUp(btn.code);
+      const entry = this.activeTouches[touch.identifier];
+      if (entry && typeof entry === 'object' && entry.type === '__tap__') {
+        // Simulate click for menu/UI interaction
+        this.canvas.dispatchEvent(new MouseEvent('click', {
+          clientX: entry.clientX,
+          clientY: entry.clientY,
+          bubbles: true,
+        }));
+      } else if (entry && typeof entry === 'string') {
+        const btn = this.buttons[entry];
+        if (btn) {
+          btn.pressed = false;
+          this.input.simulateUp(btn.code);
+        }
       }
       delete this.activeTouches[touch.identifier];
     }
