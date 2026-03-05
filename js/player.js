@@ -116,15 +116,6 @@ class Player {
     // Move
     this.x += this.speed * this.direction;
 
-    // Random trip chance when going too fast
-    if (this.speed > PLAYER_OPTIMAL_SPEED_MAX && this.isGrounded && this.stumbleImmunity <= 0) {
-      const overSpeed = (this.speed - PLAYER_OPTIMAL_SPEED_MAX) / (PLAYER_MAX_SPEED - PLAYER_OPTIMAL_SPEED_MAX);
-      if (Math.random() < TRIP_CHANCE_PER_FRAME * overSpeed * 3) {
-        this.triggerStumble(TRIP_STUN_DURATION);
-        return true; // signal: self-trip happened
-      }
-    }
-
     return false;
   }
 

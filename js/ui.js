@@ -138,7 +138,7 @@ class UI {
     ctx.font = 'bold 20px Arial';
     ctx.textAlign = 'center';
     ctx.direction = 'rtl';
-    ctx.fillText('!זהירות: ריצה מהירה מדי גורמת למעידות', cx, y);
+    ctx.fillText('!זהירות: ריצה מהירה מדי ליד מכשולים עולה בזמן', cx, y);
     ctx.direction = 'ltr';
     y += 50;
 
@@ -858,7 +858,7 @@ class UI {
     ctx.direction = 'ltr';
 
     // Two option buttons
-    const btnW = 400;
+    const btnW = 600;
     const btnH = 70;
     const gap = 30;
     const startY = 200;
@@ -888,7 +888,7 @@ class UI {
 
       // Option text
       ctx.fillStyle = COLORS.textPrimary;
-      ctx.font = '22px Arial';
+      ctx.font = '20px Arial';
       ctx.textAlign = 'center';
       ctx.direction = 'rtl';
       ctx.fillText(options[i].text, bounds.x + bounds.width / 2 + 10, bounds.y + bounds.height / 2 + 8);
@@ -917,7 +917,7 @@ class UI {
   }
 
   getQuizOptionBounds(index) {
-    const btnW = 400;
+    const btnW = 600;
     const btnH = 70;
     const gap = 30;
     const startY = 200;

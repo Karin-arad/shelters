@@ -249,13 +249,7 @@ class Game {
     }
 
     // Player
-    const tripped = this.player.update(this.input, dt);
-    if (tripped) {
-      const msg = randomChoice(STRINGS.tripMessages);
-      this.level.addFloatingText(msg, this.player.getCenterX(), this.player.y - 10, COLORS.danger);
-      this.timer.addPenalty(1.5);
-      this.stumbleSound.play();
-    }
+    this.player.update(this.input, dt);
 
     // Footstep sounds
     this.footstepSound.update(this.player.speed, this.player.isMoving, this.player.isGrounded, dt);
