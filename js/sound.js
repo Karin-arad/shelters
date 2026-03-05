@@ -1,4 +1,31 @@
 // ============================================================
+// Shared Audio Context — unlocked on first user gesture
+// ============================================================
+
+const SharedAudio = {
+  ctx: null,
+  get() {
+    if (!this.ctx) {
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+    return this.ctx;
+  },
+  unlock() {
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+};
+
+// Unlock audio on any user gesture (critical for mobile)
+['touchstart', 'touchend', 'click', 'keydown'].forEach(evt => {
+  document.addEventListener(evt, () => SharedAudio.unlock(), { once: false });
+});
+
+// ============================================================
 // Sound — Air Raid Siren (Web Audio API)
 // ============================================================
 
@@ -15,9 +42,7 @@ class SirenSound {
   }
 
   _ensureContext() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    this.ctx = SharedAudio.get();
   }
 
   start() {
@@ -134,9 +159,7 @@ class ExplosionSound {
   }
 
   _ensureContext() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    this.ctx = SharedAudio.get();
   }
 
   play() {
@@ -209,9 +232,7 @@ class FootstepSound {
   }
 
   _ensureContext() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    this.ctx = SharedAudio.get();
   }
 
   update(speed, isMoving, isGrounded, dt) {
@@ -284,9 +305,7 @@ class StumbleSound {
   }
 
   _ensureContext() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    this.ctx = SharedAudio.get();
   }
 
   play() {
@@ -368,9 +387,7 @@ class DoorSound {
   }
 
   _ensureContext() {
-    if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-    }
+    this.ctx = SharedAudio.get();
   }
 
   play() {

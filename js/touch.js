@@ -17,7 +17,6 @@ class TouchControls {
       left:  { x: pad, y: CANVAS_HEIGHT - pad - btnH, w: btnW, h: btnH, code: 'ArrowLeft',  label: '←', pressed: false },
       right: { x: pad + btnW + 10, y: CANVAS_HEIGHT - pad - btnH, w: btnW, h: btnH, code: 'ArrowRight', label: '→', pressed: false },
       jump:  { x: CANVAS_WIDTH - pad - 105, y: CANVAS_HEIGHT - pad - 105, w: 105, h: 105, code: 'Space', label: 'JUMP', pressed: false, round: true },
-      enter: { x: CANVAS_WIDTH - pad - 200, y: CANVAS_HEIGHT - pad - 75, w: 85, h: 75, code: 'Enter', label: 'מקלט', pressed: false, color: 'rgba(46, 204, 113,' },
     };
 
     if (this.isTouchDevice) {
@@ -106,6 +105,10 @@ class TouchControls {
           clientY: entry.clientY,
           bubbles: true,
         }));
+        // Also simulate Enter press for shelter entry
+        this.input.simulateDown('Enter');
+        // Release Enter next frame
+        setTimeout(() => this.input.simulateUp('Enter'), 100);
       } else if (entry && typeof entry === 'string') {
         const btn = this.buttons[entry];
         if (btn) {
