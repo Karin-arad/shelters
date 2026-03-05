@@ -525,34 +525,6 @@ class UI {
 
     ctx.textAlign = 'left';
 
-    // Shelter nearby indicator — large and prominent
-    if (this._shelterNearby) {
-      const enterPulse = Math.sin(Date.now() * 0.006) * 0.3 + 0.7;
-
-      // Background bar
-      ctx.save();
-      ctx.globalAlpha = enterPulse * 0.85;
-      ctx.fillStyle = 'rgba(46, 204, 113, 0.2)';
-      drawRoundedRect(ctx, CANVAS_WIDTH / 2 - 150, CANVAS_HEIGHT - 80, 300, 60, 14);
-      ctx.fill();
-      ctx.strokeStyle = COLORS.success;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // Key icon
-      ctx.fillStyle = COLORS.success;
-      ctx.font = 'bold 38px Arial';
-      ctx.textAlign = 'center';
-      ctx.fillText('Enter \u21b5', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 35);
-
-      // Label
-      ctx.font = 'bold 20px Arial';
-      ctx.fillStyle = COLORS.textPrimary;
-      ctx.fillText('Enter Shelter', CANVAS_WIDTH / 2, CANVAS_HEIGHT - 18);
-      ctx.restore();
-
-      ctx.textAlign = 'left';
-    }
 
     // Message display
     if (this.messageTimer > 0) {

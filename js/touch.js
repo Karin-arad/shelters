@@ -99,16 +99,12 @@ class TouchControls {
     for (const touch of e.changedTouches) {
       const entry = this.activeTouches[touch.identifier];
       if (entry && typeof entry === 'object' && entry.type === '__tap__') {
-        // Simulate click for menu/UI interaction
+        // Simulate click — game.js _handleClick handles both menu/UI and shelter door taps
         this.canvas.dispatchEvent(new MouseEvent('click', {
           clientX: entry.clientX,
           clientY: entry.clientY,
           bubbles: true,
         }));
-        // Also simulate Enter press for shelter entry
-        this.input.simulateDown('Enter');
-        // Release Enter next frame
-        setTimeout(() => this.input.simulateUp('Enter'), 100);
       } else if (entry && typeof entry === 'string') {
         const btn = this.buttons[entry];
         if (btn) {

@@ -442,6 +442,23 @@ class Game {
         break;
       }
 
+      case GameState.PLAYING: {
+        // Tap on shelter door to enter
+        if (this._nearbyShelterX != null) {
+          const doorBounds = {
+            x: this._nearbyShelterX - 20,
+            y: GROUND_Y - SHELTER_HEIGHT - 20,
+            width: SHELTER_WIDTH + 40,
+            height: SHELTER_HEIGHT + 40,
+          };
+          if (this._isInBounds(pos, doorBounds)) {
+            this.input.simulateDown('Enter');
+            setTimeout(() => this.input.simulateUp('Enter'), 100);
+          }
+        }
+        break;
+      }
+
       case GameState.SELECT: {
         const male = this.ui.getMaleCardBounds();
         const female = this.ui.getFemaleCardBounds();

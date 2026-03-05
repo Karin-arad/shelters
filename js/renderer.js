@@ -1106,36 +1106,52 @@ class Renderer {
   drawShelterIndicator(shelterScreenX) {
     const ctx = this.ctx;
     const cx = shelterScreenX + SHELTER_WIDTH / 2;
-    const y = GROUND_Y - SHELTER_HEIGHT - 30;
+    const doorTop = GROUND_Y - SHELTER_HEIGHT;
+    const doorBottom = GROUND_Y;
+    const doorCenterY = (doorTop + doorBottom) / 2;
     const pulse = Math.sin(Date.now() * 0.006) * 0.3 + 0.7;
 
     ctx.save();
-    ctx.globalAlpha = pulse;
 
-    // Glowing circle
-    const glow = ctx.createRadialGradient(cx, y, 5, cx, y, 35);
-    glow.addColorStop(0, 'rgba(46, 204, 113, 0.4)');
+    // Large glow around the whole door area (tap target visual)
+    ctx.globalAlpha = pulse * 0.5;
+    const glow = ctx.createRadialGradient(cx, doorCenterY, 10, cx, doorCenterY, 80);
+    glow.addColorStop(0, 'rgba(46, 204, 113, 0.35)');
     glow.addColorStop(1, 'rgba(46, 204, 113, 0)');
     ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(cx, y, 35, 0, Math.PI * 2);
+    ctx.arc(cx, doorCenterY, 80, 0, Math.PI * 2);
     ctx.fill();
 
-    // Arrow pointing down
+    // Pulsing border around door
+    ctx.globalAlpha = pulse;
+    ctx.strokeStyle = COLORS.success;
+    ctx.lineWidth = 3;
+    ctx.shadowColor = COLORS.success;
+    ctx.shadowBlur = 12;
+    drawRoundedRect(ctx, shelterScreenX - 4, doorTop - 4, SHELTER_WIDTH + 8, SHELTER_HEIGHT + 8, 6);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // "היכנס" label on the door
+    ctx.fillStyle = COLORS.success;
+    ctx.font = 'bold 18px Arial';
+    ctx.textAlign = 'center';
+    ctx.direction = 'rtl';
+    ctx.fillText('היכנס', cx, doorCenterY + 5);
+    ctx.direction = 'ltr';
+
+    // Arrow pointing down above door
+    const arrowY = doorTop - 15;
     ctx.fillStyle = COLORS.success;
     ctx.beginPath();
-    ctx.moveTo(cx, y + 20);
-    ctx.lineTo(cx - 10, y + 8);
-    ctx.lineTo(cx + 10, y + 8);
+    ctx.moveTo(cx, arrowY + 12);
+    ctx.lineTo(cx - 8, arrowY);
+    ctx.lineTo(cx + 8, arrowY);
     ctx.closePath();
     ctx.fill();
 
-    // "↵" label
-    ctx.font = 'bold 22px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('\u21b5', cx, y + 3);
     ctx.textAlign = 'left';
-
     ctx.restore();
   }
 }
