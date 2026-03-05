@@ -104,32 +104,32 @@ class UI {
     y += 50;
 
     // Arrow keys
-    this._drawKeyIcon(ctx, cx - 55, y - 18, 60, 34, '← →');
+    this._drawKeyIcon(ctx, cx - 170, y - 18, 60, 34, '← →');
     ctx.fillStyle = COLORS.textPrimary;
     ctx.font = '22px Arial';
     ctx.textAlign = 'right';
     ctx.direction = 'rtl';
-    ctx.fillText('חיצים: תנועה', cx + 160, y + 2);
+    ctx.fillText('חיצים: תנועה', cx + 170, y + 2);
     ctx.direction = 'ltr';
     y += 55;
 
     // Space
-    this._drawKeyIcon(ctx, cx - 55, y - 18, 90, 34, 'SPACE');
+    this._drawKeyIcon(ctx, cx - 170, y - 18, 90, 34, 'SPACE');
     ctx.fillStyle = COLORS.textPrimary;
     ctx.font = '22px Arial';
     ctx.textAlign = 'right';
     ctx.direction = 'rtl';
-    ctx.fillText('רווח: קפיצה', cx + 160, y + 2);
+    ctx.fillText('רווח: קפיצה', cx + 170, y + 2);
     ctx.direction = 'ltr';
     y += 55;
 
     // Enter
-    this._drawKeyIcon(ctx, cx - 55, y - 18, 80, 34, 'ENTER');
+    this._drawKeyIcon(ctx, cx - 170, y - 18, 80, 34, 'ENTER');
     ctx.fillStyle = COLORS.textPrimary;
     ctx.font = '22px Arial';
     ctx.textAlign = 'right';
     ctx.direction = 'rtl';
-    ctx.fillText('אנטר: כניסה למקלט', cx + 160, y + 2);
+    ctx.fillText('אנטר: כניסה למקלט', cx + 170, y + 2);
     ctx.direction = 'ltr';
     y += 60;
 
