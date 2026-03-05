@@ -1,5 +1,9 @@
 # מקלטים — Shelters
 
+<p align="center">
+  <img src="banner.svg" alt="Shelters — Run. Dodge. Prove you're Israeli. Find shelter." width="100%">
+</p>
+
 A browser-based game about the uniquely Israeli experience of sprinting to a bomb shelter when the air raid siren goes off.
 
 Navigate hallways, dodge neighbors, jump over strollers, and find a licensed shelter before time runs out — then prove you're Israeli enough to enter by answering a trivia question.
